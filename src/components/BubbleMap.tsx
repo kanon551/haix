@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import * as d3 from 'd3';
-import Plot from 'react-plotly.js';
+import CommonPlot from '../global/CommonPlot';
+import { getMapsData, unpack } from '../global/GlobalAPI';
   
 const BubbleMap = () => {
 
@@ -8,13 +8,9 @@ const BubbleMap = () => {
   const [layout, setLayout] = useState<any>({});
 
   useEffect(() => {
-    d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_us_cities.csv')
-      .then(rows => {
-        function unpack(rows:any, key:any) {
-          return rows.map((row:any) => row[key]);
-        }
 
-        var cityName = unpack(rows, 'name'),
+    getMapsData('2014_us_cities').then(rows => {
+      var cityName = unpack(rows, 'name'),
           cityPop = unpack(rows, 'pop'),
           cityLat = unpack(rows, 'lat'),
           cityLon = unpack(rows, 'lon'),
@@ -69,18 +65,13 @@ const BubbleMap = () => {
 
         setData(data);
         setLayout(layout);
-      })
-      .catch(error => console.error('Error loading CSV:', error));
+    }) .catch(error => console.error('Error loading CSV:', error));
   }, []);
 
       
   return (
     <div>
-      <Plot
-      data={data}
-      layout={layout}
-      style={{ boxShadow: 'rgba(0, 0, 0, 0.08) 0px 1px 2px', border:'1px solid lightgrey', borderRadius: '20px', display:'flex', alignItems:'center', justifyContent:'center' }}
-      />
+      <CommonPlot data={data} layout={layout}/>
     </div>
   )
 }

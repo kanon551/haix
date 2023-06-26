@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import * as d3 from 'd3';
-import Plot from 'react-plotly.js';
+import { getMapsData, unpack } from '../global/GlobalAPI';
+import CommonPlot from '../global/CommonPlot';
 
 interface ScatterData {
     x: number[];
@@ -26,11 +26,8 @@ const ThreeDScatter = () => {
     const [data, setData] = useState<any>([]);
   const [layout, setLayout] = useState<object>({});
 
-  useEffect(() => {
-    d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv').then(rows => {
-      function unpack(rows: any[], key: string): number[] {
-        return rows.map(row => parseFloat(row[key]));
-      }
+  useEffect(()=> {
+    getMapsData('3d-scatter').then(rows => {
 
       var trace1: ScatterData = {
         x: unpack(rows, 'x1'),
@@ -82,17 +79,12 @@ const ThreeDScatter = () => {
 
       setData(data);
       setLayout(layout);
-    });
-  }, []);
-
+    }).catch(error => console.error('Error loading CSV:', error));
+  },[])
 
   return (
     <div>
-      <Plot
-        data={data}
-        layout={layout}
-        style={{ boxShadow: 'rgba(0, 0, 0, 0.08) 0px 1px 2px', border:'1px solid lightgrey', borderRadius: '20px', display:'flex', alignItems:'center', justifyContent:'center' }}
-      />
+      <CommonPlot data={data} layout={layout}/>
     </div>
   )
 }
