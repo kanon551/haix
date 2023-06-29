@@ -25,6 +25,8 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LoginIcon from '@mui/icons-material/Login';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const drawerWidth = 200;
@@ -85,7 +87,11 @@ interface Props {
 
 export default function ResponsiveDrawer(props: Props) {
     const { children } = props;
+    const navigate = useNavigate();
 
+    const location = useLocation();
+  const currentUrl = location.pathname;
+  console.log(currentUrl)
 
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -94,6 +100,14 @@ export default function ResponsiveDrawer(props: Props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleNavigateToSocialMediaPosts = () => {
+    navigate('/socialmedia');
+  };
+
+  const handleNavigateToOverview = ()=> {
+    navigate('/overview');
+  }
+
   const drawer = (
     <div>
       <img src="https://haix.ai/images/HaiX_white_logo.png" style={{ padding:'1vh', margin:'1vh', width:'-webkit-fill-available'}}/>
@@ -101,9 +115,10 @@ export default function ResponsiveDrawer(props: Props) {
       <List sx={{color:'white'}}>
 
           <ListItem disablePadding sx={{'&:hover': {
-      backgroundColor: '#757575',
-    }}}>
-            <ListItemButton>
+      backgroundColor: '#757575'},
+      background: currentUrl === '/overview' ? "blueViolet" : 'transparent'
+      }}>
+            <ListItemButton onClick={handleNavigateToOverview}>
               <ListItemIcon>
                     <EqualizerIcon sx={{color:'white'}}/>
               </ListItemIcon>
@@ -113,7 +128,9 @@ export default function ResponsiveDrawer(props: Props) {
 
           <ListItem disablePadding sx={{'&:hover': {
       backgroundColor: '#757575',
-    }}}>
+    },
+    
+    }}>
             <ListItemButton>
               <ListItemIcon>
                     <PeopleIcon sx={{color:'white'}}/>
@@ -124,8 +141,10 @@ export default function ResponsiveDrawer(props: Props) {
 
           <ListItem disablePadding sx={{'&:hover': {
       backgroundColor: '#757575',
-    }}}>
-            <ListItemButton>
+    },
+    background: currentUrl === '/socialmedia' ? "blueViolet" : 'transparent'
+    }}>
+            <ListItemButton onClick={handleNavigateToSocialMediaPosts}>
               <ListItemIcon>
                     <StoreIcon sx={{color:'white'}}/>
               </ListItemIcon>
